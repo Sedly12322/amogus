@@ -1,0 +1,60 @@
+import pygame
+
+# Initialize pygame
+pygame.init()
+
+# Set up the screen
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+
+# Set up the player character
+player_image = pygame.image.load("player.png")
+player_x = screen_width / 2
+player_y = screen_height / 2
+player_speed = 5
+
+# Set up the fish
+fish_image = pygame.image.load("fish.png")
+fish_x = 0
+fish_y = 0
+fish_speed = 3
+
+# Set up the fishing rod
+rod_image = pygame.image.load("rod.png")
+rod_x = player_x
+rod_y = player_y
+
+# Game loop
+while True:
+    # Handle player movement
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        player_x -= player_speed
+    if keys[pygame.K_RIGHT]:
+        player_x += player_speed
+    if keys[pygame.K_UP]:
+        player_y -= player_speed
+    if keys[pygame.K_DOWN]:
+        player_y += player_speed
+
+    # Update the fishing rod position
+    rod_x = player_x
+    rod_y = player_y
+
+    # Update the fish position
+    fish_x += fish_speed
+    if fish_x > screen_width:
+        fish_x = 0
+
+    # Draw the screen
+    screen.fill((0, 0, 0))
+    screen.blit(player_image, (player_x, player_y))
+    screen.blit(rod_image, (rod_x, rod_y))
+    screen.blit(fish_image, (fish_x, fish_y))
+    pygame.display.flip()
+
+    # Check for collisions
+    if rod_x < fish_x < rod_x + rod_image.get_width() and rod_y < fish_y < rod_y + rod_image.get_height():
+        print("You caught a fish!")
+        fish_x = 0
